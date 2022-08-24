@@ -9,7 +9,7 @@ namespace Matrix
 {
     internal class Program
     {
-        static void Matrix()
+        static void Matrix(object column)
         {
             Random random = new Random();
             int[] matrixMass = new int[random.Next(5, 11)];
@@ -25,65 +25,65 @@ namespace Matrix
             int[] rowMass = new int[Console.WindowHeight + matrixMass.Length];
             while (true)
             {
-                int column = 0;
                 for (int i = 0; i < rowMass.Length; i++)
                 {
-                    for(int k = 0; k < rowMass.Length; k++)
+                    lock (rowMass)
                     {
-                        if (k > i - matrixMass.Length)
+                        for (int k = 0; k < rowMass.Length; k++)
                         {
-                            if(k <= i)
-                                rowMass[k] = matrixMass[i - k];
+                            if (k > i - matrixMass.Length)
+                            {
+                                if (k <= i)
+                                    rowMass[k] = matrixMass[i - k];
+                                else
+                                    rowMass[k] = 0;
+                            }
                             else
                                 rowMass[k] = 0;
                         }
-                        else
-                            rowMass[k] = 0;
                     }
-                    for(int j = 0; j < rowMass.Length; j++)
+                    lock (rowMass)
                     {
-                        if(j < Console.WindowHeight)
+                        for (int j = 0; j < rowMass.Length; j++)
                         {
-                            Console.SetCursorPosition(column, j);
-                            if (rowMass[j] == 0)
+                            if (j < Console.WindowHeight)
                             {
-                                Console.Write(" ");
-                            }
-                            else if (rowMass[j] == 1)
-                            {
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write((char)random.Next(60, 120));
-                            }
-                            else if (rowMass[j] == 2)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write((char)random.Next(60, 120));
-                            }
-                            else if (rowMass[j] == 3)
-                            {
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                Console.Write((char)random.Next(60, 120));
+                                Console.SetCursorPosition((int)column, j);
+                                if (rowMass[j] == 0)
+                                {
+                                    Console.Write(" ");
+                                }
+                                else if (rowMass[j] == 1)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                    Console.Write((char)random.Next(60, 120));
+                                }
+                                else if (rowMass[j] == 2)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.Write((char)random.Next(60, 120));
+                                }
+                                else if (rowMass[j] == 3)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    Console.Write((char)random.Next(60, 120));
+                                }
                             }
                         }
+                        Thread.Sleep(random.Next(150));
                     }
-                    Thread.Sleep(random.Next(150));
                 }
-                if (column < 5)
-                    column++;
-                else
-                    column = 0;
             }
         }
         static void Main(string[] args)
         {
             Console.SetWindowSize(100, 30);
             Console.SetBufferSize(100, 30);
-            Matrix();
 
-            //for (int i = 0; i < Console.WindowWidth / 5; i++)
-            //{
-            //    new Thread(Matrix).Start();
-            //}
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                new Thread(Matrix).Start(i);
+            }
         }
     }
 }
