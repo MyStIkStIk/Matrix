@@ -12,20 +12,20 @@ namespace Matrix
         static void Matrix()
         {
             Random random = new Random();
-            int[] rowMass = new int[Console.WindowHeight];
+            int[] matrixMass = new int[random.Next(5, 11)];
+            for (int i = 0; i < matrixMass.Length; i++)
+            {
+                if (i == 0)
+                    matrixMass[i] = 1;
+                else if (i == 1)
+                    matrixMass[i] = 2;
+                else
+                    matrixMass[i] = 3;
+            }
+            int[] rowMass = new int[Console.WindowHeight + matrixMass.Length];
             while (true)
-            {;
+            {
                 int column = 0;
-                int[] matrixMass = new int[random.Next(5, 11)];
-                for (int i = 0; i < matrixMass.Length; i++)
-                {
-                    if (i == 0)
-                        matrixMass[i] = 1;
-                    else if (i == 1)
-                        matrixMass[i] = 2;
-                    else
-                        matrixMass[i] = 3;
-                }
                 for (int i = 0; i < rowMass.Length; i++)
                 {
                     for(int k = 0; k < rowMass.Length; k++)
@@ -43,28 +43,30 @@ namespace Matrix
                     for(int j = 0; j < rowMass.Length; j++)
                     {
                         if(j < Console.WindowHeight)
+                        {
                             Console.SetCursorPosition(column, j);
-                        if (rowMass[j] == 0)
-                        {
-                            Console.Write(" ");
-                        }
-                        else if (rowMass[j] == 1)
-                        {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write((char)random.Next(60,120));
-                        }
-                        else if (rowMass[j] == 2)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write((char)random.Next(60, 120));
-                        }
-                        else if (rowMass[j] == 3)
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.Write((char)random.Next(60, 120));
+                            if (rowMass[j] == 0)
+                            {
+                                Console.Write(" ");
+                            }
+                            else if (rowMass[j] == 1)
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write((char)random.Next(60, 120));
+                            }
+                            else if (rowMass[j] == 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write((char)random.Next(60, 120));
+                            }
+                            else if (rowMass[j] == 3)
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.Write((char)random.Next(60, 120));
+                            }
                         }
                     }
-                    Thread.Sleep(random.Next(300, 601));
+                    Thread.Sleep(random.Next(150));
                 }
                 if (column < 5)
                     column++;
